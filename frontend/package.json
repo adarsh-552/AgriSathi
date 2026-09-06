@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "agrisathi-frontend",
   "private": true,
   "version": "1.0.0",
@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "axios": "^1.7.7",
     "lucide-react": "^0.439.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
