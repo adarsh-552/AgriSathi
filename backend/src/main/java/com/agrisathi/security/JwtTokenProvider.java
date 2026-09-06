@@ -1,4 +1,4 @@
-﻿package com.agrisathi.security;
+package com.agrisathi.security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;

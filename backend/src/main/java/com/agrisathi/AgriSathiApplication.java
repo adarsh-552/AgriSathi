@@ -1,4 +1,4 @@
-﻿package com.agrisathi;
+package com.agrisathi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

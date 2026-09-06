@@ -1,4 +1,4 @@
-﻿package com.agrisathi.service;
+package com.agrisathi.service;
 
 import com.agrisathi.dto.DTOs;
 import com.agrisathi.entity.CropEvent;

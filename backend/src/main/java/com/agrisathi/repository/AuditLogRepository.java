@@ -1,4 +1,4 @@
-﻿package com.agrisathi.repository;
+package com.agrisathi.repository;
 import com.agrisathi.entity.AuditLog;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

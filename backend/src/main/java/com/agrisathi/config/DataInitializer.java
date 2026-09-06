@@ -1,4 +1,4 @@
-﻿package com.agrisathi.config;
+package com.agrisathi.config;
 
 import com.agrisathi.entity.*;
 import com.agrisathi.repository.*;

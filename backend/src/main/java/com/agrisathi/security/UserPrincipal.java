@@ -1,4 +1,4 @@
-﻿package com.agrisathi.security;
+package com.agrisathi.security;
 
 import com.agrisathi.entity.User;
 import org.springframework.security.core.GrantedAuthority;

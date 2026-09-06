@@ -1,4 +1,4 @@
-﻿package com.agrisathi.service;
+package com.agrisathi.service;
 
 import com.agrisathi.entity.MarketData;
 import com.agrisathi.entity.WeatherData;

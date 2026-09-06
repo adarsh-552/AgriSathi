@@ -1,4 +1,4 @@
-﻿package com.agrisathi.entity;
+package com.agrisathi.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
