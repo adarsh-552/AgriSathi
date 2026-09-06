@@ -23,7 +23,10 @@ export const cropService = {
 
   // Confirm a stage milestone
   confirmMilestone: async (cropId, milestoneCode) => {
-    const response = await api.post(`/crops/${cropId}/milestone`, { milestoneCode });
+    const response = await api.post(`/crops/${cropId}/milestone`, {
+      milestoneCode,
+      stageCode: milestoneCode,
+    });
     return response.data;
   },
 };

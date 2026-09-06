@@ -10,9 +10,12 @@ export const externalService = {
   },
 
   // Get Agmarknet daily mandi commodity modal rates
-  getMarketPrices: async (market) => {
+  getMarketPrices: async (marketOrDistrict) => {
     const response = await api.get('/external/market-prices', {
-      params: { market },
+      params: {
+        district: marketOrDistrict,
+        market: marketOrDistrict,
+      },
     });
     return response.data;
   },

@@ -1,4 +1,4 @@
-﻿package com.agrisathi.dto;
+package com.agrisathi.dto;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -8,11 +8,14 @@ public class DTOs {
     public static class OtpRequest {
         private String mobileNumber;
         private String email;
+        private String identifier;
 
         public String getMobileNumber() { return mobileNumber; }
         public void setMobileNumber(String mobileNumber) { this.mobileNumber = mobileNumber; }
         public String getEmail() { return email; }
         public void setEmail(String email) { this.email = email; }
+        public String getIdentifier() { return identifier; }
+        public void setIdentifier(String identifier) { this.identifier = identifier; }
     }
 
     public static class VerifyOtpRequest {

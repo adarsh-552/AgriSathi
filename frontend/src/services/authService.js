@@ -3,7 +3,10 @@ import api from './api';
 export const authService = {
   // Mobile or Email OTP request
   requestOtp: async (identifier) => {
-    const response = await api.post('/auth/otp/request', { identifier });
+    const payload = identifier.includes('@')
+      ? { email: identifier, identifier }
+      : { mobileNumber: identifier, identifier };
+    const response = await api.post('/auth/otp/request', payload);
     return response.data;
   },
 

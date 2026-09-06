@@ -1,4 +1,4 @@
-﻿package com.agrisathi.controller;
+package com.agrisathi.controller;
 
 import com.agrisathi.dto.DTOs;
 import com.agrisathi.entity.ProblemDiagnosis;
@@ -17,7 +17,12 @@ public class DiagnosticController {
     }
 
     @PostMapping("/evaluate")
-    public ResponseEntity<ProblemDiagnosis> evaluateSymptom(@RequestBody DTOs.ProblemReportRequest request) {
+    public ResponseEntity<ProblemDiagnosis> evaluateSymptom(
+            @RequestBody DTOs.ProblemReportRequest request,
+            @RequestParam(required = false) Long cropId) {
+        if (request.getFarmerCropId() == null && cropId != null) {
+            request.setFarmerCropId(cropId);
+        }
         ProblemDiagnosis diagnosis = safetyGateService.evaluateProblem(request);
         return ResponseEntity.ok(diagnosis);
     }

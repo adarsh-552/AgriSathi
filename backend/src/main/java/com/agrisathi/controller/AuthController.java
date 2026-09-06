@@ -1,4 +1,4 @@
-﻿package com.agrisathi.controller;
+package com.agrisathi.controller;
 
 import com.agrisathi.dto.DTOs;
 import com.agrisathi.service.AuthService;
@@ -19,7 +19,9 @@ public class AuthController {
 
     @PostMapping("/otp/request")
     public ResponseEntity<?> requestOtp(@RequestBody DTOs.OtpRequest request) {
-        String identifier = request.getMobileNumber() != null ? request.getMobileNumber() : request.getEmail();
+        String identifier = request.getIdentifier() != null && !request.getIdentifier().isBlank()
+                ? request.getIdentifier()
+                : (request.getMobileNumber() != null ? request.getMobileNumber() : request.getEmail());
         if (identifier == null || identifier.isBlank()) {
             return ResponseEntity.badRequest().body(Map.of("error", "Mobile number or email is required."));
         }

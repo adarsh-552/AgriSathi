@@ -1,4 +1,4 @@
-﻿package com.agrisathi.controller;
+package com.agrisathi.controller;
 
 import com.agrisathi.entity.MarketData;
 import com.agrisathi.entity.WeatherData;
@@ -24,7 +24,10 @@ public class ExternalDataController {
     }
 
     @GetMapping("/market-prices")
-    public ResponseEntity<List<MarketData>> getMarketPrices(@RequestParam(required = false, defaultValue = "Kurnool") String district) {
-        return ResponseEntity.ok(externalDataService.getMandiPrices(district));
+    public ResponseEntity<List<MarketData>> getMarketPrices(
+            @RequestParam(required = false) String district,
+            @RequestParam(required = false) String market) {
+        String queryDistrict = district != null && !district.isBlank() ? district : market;
+        return ResponseEntity.ok(externalDataService.getMandiPrices(queryDistrict));
     }
 }

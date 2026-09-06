@@ -1,4 +1,4 @@
-﻿package com.agrisathi.controller;
+package com.agrisathi.controller;
 
 import com.agrisathi.dto.DTOs;
 import com.agrisathi.entity.Crop;
@@ -47,7 +47,9 @@ public class FarmerCropController {
     public ResponseEntity<?> confirmMilestone(
             @PathVariable Long cropId,
             @RequestBody Map<String, String> payload) {
-        String targetStageCode = payload.get("stageCode");
+        String targetStageCode = payload.get("stageCode") != null
+                ? payload.get("stageCode")
+                : payload.get("milestoneCode");
         cropJourneyService.confirmMilestone(cropId, targetStageCode);
         return ResponseEntity.ok(Map.of("message", "Milestone confirmed and stage recalculated."));
     }
