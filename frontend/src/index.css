@@ -1,0 +1,148 @@
+/* AgriSathi Global Styles */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Brand Variables ────────────────────────────────── */
+:root {
+  --primary: #1E5E3A;
+  --primary-dark: #164d30;
+  --primary-light: #2d7a50;
+  --gold: #D97706;
+  --earth: #795548;
+  --danger: #DC2626;
+  --bg-app: #f0f4f0;
+}
+
+/* ── Base ────────────────────────────────────────────── */
+@layer base {
+  html { font-size: 16px; }
+  body {
+    background-color: var(--bg-app);
+    color: #1a1a1a;
+    min-height: 100vh;
+  }
+  /* Smooth scrolling */
+  * { scroll-behavior: smooth; }
+  /* Remove input autofill blue */
+  input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 30px white inset !important;
+  }
+}
+
+/* ── Custom Component Classes ────────────────────────── */
+@layer components {
+
+  /* Mobile app container — max width like a phone */
+  .app-container {
+    @apply max-w-md mx-auto min-h-screen bg-white relative overflow-hidden;
+  }
+
+  /* Primary button */
+  .btn-primary {
+    @apply w-full py-3.5 px-6 rounded-2xl text-white font-semibold text-base
+           transition-all duration-200 active:scale-95 select-none;
+    background: var(--primary);
+  }
+  .btn-primary:hover { background: var(--primary-light); }
+  .btn-primary:disabled { @apply opacity-50 cursor-not-allowed; }
+
+  /* Gold/accent button */
+  .btn-gold {
+    @apply w-full py-3.5 px-6 rounded-2xl text-white font-semibold text-base
+           transition-all duration-200 active:scale-95 select-none;
+    background: var(--gold);
+  }
+
+  /* Outlined button */
+  .btn-outline {
+    @apply w-full py-3.5 px-6 rounded-2xl font-semibold text-base border-2
+           transition-all duration-200 active:scale-95 select-none;
+    border-color: var(--primary);
+    color: var(--primary);
+  }
+
+  /* Card */
+  .card {
+    @apply bg-white rounded-2xl shadow-card p-4;
+  }
+
+  /* Text input */
+  .input-field {
+    @apply w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-base
+           focus:outline-none focus:border-forest-green transition-colors duration-200;
+  }
+
+  /* Section header */
+  .section-title {
+    @apply text-lg font-bold text-forest-green mb-3;
+  }
+
+  /* Safety red badge */
+  .badge-danger {
+    @apply bg-red-100 text-safety-red text-xs font-semibold px-2 py-1 rounded-full;
+  }
+
+  /* Green badge */
+  .badge-success {
+    @apply bg-green-100 text-forest-green text-xs font-semibold px-2 py-1 rounded-full;
+  }
+
+  /* Gold badge */
+  .badge-warning {
+    @apply bg-amber-100 text-harvest-gold text-xs font-semibold px-2 py-1 rounded-full;
+  }
+
+  /* Bottom nav height spacer */
+  .pb-nav { padding-bottom: 5rem; }
+}
+
+/* ── Utilities ───────────────────────────────────────── */
+@layer utilities {
+  .text-primary { color: var(--primary); }
+  .bg-primary { background: var(--primary); }
+  .border-primary { border-color: var(--primary); }
+
+  /* Telugu script */
+  .font-telugu { font-family: 'Noto Sans Telugu', sans-serif; }
+  /* Hindi script */
+  .font-hindi { font-family: 'Noto Sans Devanagari', sans-serif; }
+
+  /* Gradient backgrounds */
+  .bg-green-gradient {
+    background: linear-gradient(135deg, #1E5E3A 0%, #2d7a50 100%);
+  }
+  .bg-gold-gradient {
+    background: linear-gradient(135deg, #D97706 0%, #f59e0b 100%);
+  }
+  .bg-earth-gradient {
+    background: linear-gradient(135deg, #795548 0%, #a1887f 100%);
+  }
+
+  /* Slide-up animation */
+  .slide-up {
+    animation: slideUp 0.35s ease-out;
+  }
+  @keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+  }
+
+  /* Fade-in */
+  .fade-in {
+    animation: fadeIn 0.4s ease-out;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  /* Pulse ring for attention */
+  .ring-pulse {
+    animation: ringPulse 1.5s infinite;
+  }
+  @keyframes ringPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(30,94,58,0.4); }
+    50%       { box-shadow: 0 0 0 12px rgba(30,94,58,0); }
+  }
+}
