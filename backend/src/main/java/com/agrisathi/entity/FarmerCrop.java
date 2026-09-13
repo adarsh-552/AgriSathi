@@ -1,17 +1,21 @@
 package com.agrisathi.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "farmer_crops")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class FarmerCrop {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "farmer_profile_id", nullable = false)
     private FarmerProfile farmerProfile;

@@ -25,7 +25,10 @@ export function AuthProvider({ children }) {
   // Parse JWT payload (no verify — server-side validates)
   const parseToken = useCallback((jwt) => {
     try {
-      const base64 = jwt.split('.')[1]
+      let base64 = jwt.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')
+      while (base64.length % 4) {
+        base64 += '='
+      }
       const payload = JSON.parse(atob(base64))
       return {
         userId:     payload.sub,

@@ -1,9 +1,12 @@
 package com.agrisathi.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "crop_tasks")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class CropTask {
 
     @Id

@@ -1,16 +1,20 @@
 package com.agrisathi.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "problem_diagnoses")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class ProblemDiagnosis {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "crop_problem_id", nullable = false, unique = true)
     private CropProblem cropProblem;
