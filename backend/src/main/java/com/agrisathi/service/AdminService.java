@@ -19,13 +19,15 @@ public class AdminService {
     private final AgricultureContentRepository contentRepository;
     private final MarketDataRepository marketDataRepository;
     private final AuditLogRepository auditLogRepository;
+    private final KvkEscalationRepository kvkEscalationRepository;
 
-    public AdminService(UserRepository userRepository, CropRepository cropRepository, AgricultureContentRepository contentRepository, MarketDataRepository marketDataRepository, AuditLogRepository auditLogRepository) {
+    public AdminService(UserRepository userRepository, CropRepository cropRepository, AgricultureContentRepository contentRepository, MarketDataRepository marketDataRepository, AuditLogRepository auditLogRepository, KvkEscalationRepository kvkEscalationRepository) {
         this.userRepository = userRepository;
         this.cropRepository = cropRepository;
         this.contentRepository = contentRepository;
         this.marketDataRepository = marketDataRepository;
         this.auditLogRepository = auditLogRepository;
+        this.kvkEscalationRepository = kvkEscalationRepository;
     }
 
     public Map<String, Object> getSystemOverview() {
@@ -34,9 +36,11 @@ public class AdminService {
         stats.put("activeCropsCount", cropRepository.count());
         stats.put("verifiedContentsCount", contentRepository.count());
         stats.put("mandiRecordsCount", marketDataRepository.count());
+        stats.put("totalEscalationsCount", kvkEscalationRepository.count());
         stats.put("recentAuditLogs", auditLogRepository.findAllByOrderByCreatedAtDesc());
         return stats;
     }
+
 
     @Transactional
     public AgricultureContent publishContent(Long contentId, String adminEmail, String ipAddress) {

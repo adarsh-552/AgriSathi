@@ -88,11 +88,7 @@ export default function LoginScreen({ onOtpRequested, onAdminLoginClick }) {
           </button>
         </form>
 
-        <div className="mt-4 text-center">
-          <span className="text-[11px] text-gray-500">
-            పరీక్ష కోసం డెమో OTP: <span className="font-mono font-bold text-forest-green">123456</span>
-          </span>
-        </div>
+
       </div>
 
       {/* Admin Login Link */}

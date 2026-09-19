@@ -1,4 +1,4 @@
-﻿{
+{
   "app_name": "AgriSathi",
   "app_tagline": "Your Farm. Our Support.",
   "app_motto": "For the Farmer... In the Farmer's Language... By the Farmer's Side...",
@@ -72,5 +72,11 @@
   "nav_profile": "Profile",
   "admin_title": "Admin Dashboard",
   "welcome_admin": "Welcome, Admin 🛡️",
-  "crop_memory_title": "Crop Memory Ledger"
+  "crop_memory_title": "Crop Memory Ledger",
+  "schemes_title": "Govt Schemes",
+  "knowledge_title": "ICAR Knowledge",
+  "alerts_title": "Alerts",
+  "escalation_title": "KVK Scientist Advice",
+  "add_crop": "Add Crop Plot"
 }
+

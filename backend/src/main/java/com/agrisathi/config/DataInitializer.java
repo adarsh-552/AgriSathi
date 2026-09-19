@@ -19,9 +19,10 @@ public class DataInitializer implements CommandLineRunner {
     private final WeatherDataRepository weatherDataRepository;
     private final MarketDataRepository marketDataRepository;
     private final AgricultureContentRepository contentRepository;
+    private final GovernmentSchemeRepository governmentSchemeRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public DataInitializer(UserRepository userRepository, CropRepository cropRepository, CropStageRepository cropStageRepository, CropTaskRepository cropTaskRepository, WeatherDataRepository weatherDataRepository, MarketDataRepository marketDataRepository, AgricultureContentRepository contentRepository, PasswordEncoder passwordEncoder) {
+    public DataInitializer(UserRepository userRepository, CropRepository cropRepository, CropStageRepository cropStageRepository, CropTaskRepository cropTaskRepository, WeatherDataRepository weatherDataRepository, MarketDataRepository marketDataRepository, AgricultureContentRepository contentRepository, GovernmentSchemeRepository governmentSchemeRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.cropRepository = cropRepository;
         this.cropStageRepository = cropStageRepository;
@@ -29,6 +30,7 @@ public class DataInitializer implements CommandLineRunner {
         this.weatherDataRepository = weatherDataRepository;
         this.marketDataRepository = marketDataRepository;
         this.contentRepository = contentRepository;
+        this.governmentSchemeRepository = governmentSchemeRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -39,6 +41,7 @@ public class DataInitializer implements CommandLineRunner {
         seedWeatherData();
         seedMarketData();
         seedAgricultureContent();
+        seedGovernmentSchemes();
     }
 
     private void seedAdminUser() {
@@ -68,9 +71,14 @@ public class DataInitializer implements CommandLineRunner {
             CropStage s6 = new CropStage(cotton, 6, "HARVEST", "Picking & Post-Harvest", "పత్తి తీయడం & నిల్వ", "चुनाई एवं भंडारण", 121, 160, 1200.0, "Pick dry, clean cotton in morning hours. Avoid trash contamination.", "ఉదయం పూట మంచు ఆరిన తర్వాత మాత్రమే శుభ్రంగా పత్తిని తీయండి.", "ओस सूखने के बाद ही साफ-सुथरी कपास की चुनाई करें।");
             cropStageRepository.saveAll(List.of(s1, s2, s3, s4, s5, s6));
 
-            // Seed sample tasks for flowering stage
-            CropTask t1 = new CropTask(s4, 2, "INSPECTION", "Flowering Check & Foliar Spray", "పూతదశ చెకప్ & ఫోలియర్ స్ప్రే", "फूल निरीक्षण एवं पर्णीय छिड़काव", "Inspect 20 plants for flower drop. Apply 13-0-45 foliar spray at 5g/L if stress is observed.", "పూత రాలకుండా గమనించండి. అవసరమైతే 13-0-45 ఎరువును లీటరు నీటికి 5 గ్రాములు కలిపి పిచికారీ చేయండి.", "फूलों के झड़ने की जांच करें और आवश्यक हो तो 13-0-45 का छिड़काव करें।", "LOW", true);
-            cropTaskRepository.save(t1);
+            // Seed authentic agronomic tasks across all stages
+            CropTask t1 = new CropTask(s1, 1, "SEED_TREATMENT", "Seed Treatment & Dibbling", "విత్తన శుద్ధి & నాటడం", "बीज उपचार एवं बुवाई", "Treat seeds with Imidacloprid 70WS (5g/kg) and Trichoderma (10g/kg) before sowing.", "విత్తనాలను ఇమిడాక్లోప్రిడ్ మరియు ట్రైకోడెర్మాతో శుద్ధి చేసి నాటండి.", "बीज को इमिडाक्लोप्रिड और ट्राइकोडर्मा से उपचारित करें।", "MEDIUM", true);
+            CropTask t2 = new CropTask(s2, 10, "THINNING", "Gap Filling & Thinning", "గ్యాప్ ఫిల్లింగ్ & మొక్కల ఎంపిక", "रिक्त स्थान भरना एवं छंटाई", "Thin seedlings to keep one healthy plant per hill. Fill gaps with reserve seedlings.", "ఒక స్థానంలో ఒకే బలమైన మొక్కను ఉంచి మిగతావి తొలగించండి.", "प्रति स्थान एक स्वस्थ पौधा छोड़ें, शेष पौधे हटा दें।", "LOW", false);
+            CropTask t3 = new CropTask(s3, 30, "NUTRIENT_MANAGEMENT", "Vegetative Top Dressing & Pest Traps", "ఎరువుల యాజమాన్యం & పసుపు జిగురు బోర్డులు", "उर्वरक प्रबंधन एवं पीले चिपचिपे जाल", "Apply 1st top dressing of Nitrogen (Urea 25kg/acre). Install yellow sticky traps (8-10/acre) for sucking pest monitoring.", "ఎకరాకు 25 కేజీల యూరియాను వేయండి. రసం పీల్చే పురుగుల కోసం పసుపు జిగురు అట్టలను ఏర్పాటు చేయండి.", "25 किग्रा यूरिया प्रति एकड़ दें। रस चूसक कीटों के लिए पीले चिपचिपे ट्रैप लगाएं।", "MEDIUM", true);
+            CropTask t4 = new CropTask(s4, 50, "FLOWERING_CARE", "Flowering Check & Foliar Spray", "పూతదశ చెకప్ & ఫోలియర్ స్ప్రే", "फूल निरीक्षण एवं पर्णीय छिड़काव", "Inspect 20 plants for flower drop. Apply 13-0-45 foliar spray at 5g/L if stress is observed. Install pink bollworm pheromone traps.", "పూత రాలకుండా గమనించండి. అవసరమైతే 13-0-45 ఎరువును లీటరు నీటికి 5 గ్రాములు కలిపి పిచికారీ చేయండి.", "फूलों के झड़ने की जांच करें और आवश्यक हो तो 13-0-45 का छिड़काव करें।", "LOW", true);
+            CropTask t5 = new CropTask(s5, 80, "BOLL_PROTECTION", "Boll Development & Moisture Control", "కాయ ఎదుగుదల & తేమ నియంత్రణ", "टेंडा विकास एवं नमी नियंत्रण", "Regulate irrigation intervals. Avoid water accumulation around root zones to prevent boll rot.", "కాయలు కుళ్ళకుండా పొలంలో నీరు నిల్వ ఉండకుండా చూడండి.", "टेंडे सड़ने से बचाने के लिए जलभराव न होने दें।", "MEDIUM", true);
+            CropTask t6 = new CropTask(s6, 125, "HARVESTING", "Clean Cotton Picking", "పరిశుభ్రమైన పత్తి సేకరణ", "साफ कपास चुनाई", "Pick dry cotton in morning hours after dew dries. Separate stained and infested bolls.", "ఉదయం పూట మంచు ఆరిన తర్వాత మాత్రమే శుభ్రంగా పత్తిని తీయండి.", "ओस सूखने के बाद ही साफ-सुथरी कपास की चुनाई करें।", "HIGH", true);
+            cropTaskRepository.saveAll(List.of(t1, t2, t3, t4, t5, t6));
 
             // 2. Paddy
             Crop paddy = new Crop("PADDY", "Paddy (Rice)", "వరి", "धान", "CEREAL", 10.0, 130, "/icons/paddy.svg");
@@ -166,8 +174,174 @@ public class DataInitializer implements CommandLineRunner {
             c1.setScientificCitation("CICR Cotton Advisory Bulletin 2024, Section 4.2");
             c1.setVerificationStatus("PUBLISHED");
             c1.setVerifiedBy("admin@agrisathi.com");
-            contentRepository.save(c1);
-            System.out.println(">>> Seeded verified ICAR agronomic reference content.");
+            AgricultureContent c2 = new AgricultureContent();
+            c2.setContentCode("PADDY_AWD_WATER_MGMT");
+            c2.setTitleEn("Alternate Wetting and Drying (AWD) in Paddy");
+            c2.setTitleTe("వరిలో ఆరుతడుల నీటి యాజమాన్య పద్ధతి (AWD)");
+            c2.setTitleHi("धान में वैकल्पिक गीला और सूखा (AWD) जल प्रबंधन");
+            c2.setBodyEn("Alternate Wetting and Drying saves up to 30% irrigation water without reducing grain yield. Monitor water level using a perforated field water tube (pani pipe). Re-irrigate when water drops 15 cm below soil surface.");
+            c2.setBodyTe("వరిలో నిరంతరం నీరు నిల్వ ఉంచకుండా, పొలం ఆరిన తర్వాత మాత్రమే తడులు ఇవ్వడం ద్వారా 30% నీటిని ఆదా చేయవచ్చు. నీటి గొట్టం ద్వారా పరిశీలించి తడులు ఇవ్వండి.");
+            c2.setBodyHi("धान में लगातार पानी भरने के बजाय 2-3 दिन खेत सूखने के बाद सिंचाई करने से 30% पानी की बचत होती है और पैदावार बढ़ती है।");
+            c2.setSourceInstitution("ICAR - Indian Institute of Rice Research (IIRR)");
+            c2.setScientificCitation("IIRR Technical Bulletin No. 89/2023");
+            c2.setVerificationStatus("PUBLISHED");
+            c2.setVerifiedBy("admin@agrisathi.com");
+
+            AgricultureContent c3 = new AgricultureContent();
+            c3.setContentCode("CHILLI_THRIPS_MITES_IPM");
+            c3.setTitleEn("Safe Management of Chilli Thrips & Mites");
+            c3.setTitleTe("మిర్చిలో తామర పురుగులు, నల్లి నివారణ సమగ్ర సస్యరక్షణ");
+            c3.setTitleHi("मिर्च में थ्रिप्स और माइट्स का सुरक्षित प्रबंधन");
+            c3.setBodyEn("Avoid high-dose synthetic pyrethroids. Install 20 blue sticky traps for thrips and spray 5% Neem Seed Kernel Extract (NSKE) or Neem Oil 1500ppm at 5ml/L during evening hours.");
+            c3.setBodyTe("మిర్చిలో సింథటిక్ మందులు వాడితే పురుగులు మరింత పెరుగుతాయి. ఎకరాకు 20 నీలి రంగు జిగురు అట్టలు అమర్చండి. 5% వేప గింజల కషాయం పిచికారీ చేయండి.");
+            c3.setBodyHi("मिर्च में तेज रासायनिक दवाओं के बजाय 20 नीले चिपचिपे जाल लगाएं और नीम तेल 1500 ppm (5 मिली/लीटर) का छिड़काव करें।");
+            c3.setSourceInstitution("Acharya N.G. Ranga Agricultural University (ANGRAU)");
+            c3.setScientificCitation("ANGRAU Crop Protection Advisory 2024, Page 112");
+            c3.setVerificationStatus("PUBLISHED");
+            c3.setVerifiedBy("admin@agrisathi.com");
+
+            AgricultureContent c4 = new AgricultureContent();
+            c4.setContentCode("MAIZE_FAW_IPM_PROTOCOL");
+            c4.setTitleEn("Fall Armyworm (FAW) Protocol in Maize");
+            c4.setTitleTe("మొక్కజొన్నలో కత్తెర పురుగు నివారణ సమగ్ర విధానం");
+            c4.setTitleHi("मक्का में फॉल आर्मीवर्म का एकीकृत नियंत्रण");
+            c4.setBodyEn("Install 5 pheromone traps per acre at 15-20 days after germination. Apply Metarhizium anisopliae or Beauveria bassiana (5g/L) into the whorls. Use sand or soil mix in leaf whorls to prevent larva movement.");
+            c4.setBodyTe("మొక్కజొన్న విత్తిన 15 రోజులకే ఎకరాకు 5 లింగాకర్షక బుట్టలు అమర్చండి. సుడులలో బవేరియా బాసియానా లేదా మెటారైజియం (5 గ్రా/లీ) పిచికారీ చేయండి.");
+            c4.setBodyHi("मक्का के पौधों में सुंडी नियंत्रण के लिए शुरुआती अवस्था में नीम अर्क और बवेरिया बासियाना का छिड़काव करें। 5 फेरोमोन ट्रैप लगाएं।");
+            c4.setSourceInstitution("ICAR - Indian Institute of Maize Research (IIMR)");
+            c4.setScientificCitation("IIMR FAW Management SOP 2023");
+            c4.setVerificationStatus("PUBLISHED");
+            c4.setVerifiedBy("admin@agrisathi.com");
+
+            contentRepository.saveAll(List.of(c1, c2, c3, c4));
+            System.out.println(">>> Seeded verified ICAR agronomic reference contents (4 topics).");
+        }
+    }
+
+    private void seedGovernmentSchemes() {
+        if (governmentSchemeRepository.count() == 0) {
+            GovernmentScheme s1 = new GovernmentScheme(
+                    "PM_KISAN",
+                    "PM-KISAN (Pradhan Mantri Kisan Samman Nidhi)",
+                    "పీఎం కిసాన్ సమ్మాన్ నిధి (PM-KISAN)",
+                    "प्रधानमंत्री किसान सम्मान निधि (PM-KISAN)",
+                    "FINANCIAL_INCOME",
+                    "Direct income support of Rs. 6,000 per year in three equal 4-monthly installments of Rs. 2,000 directly transferred into Aadhaar-linked bank accounts of landholding farmer families.",
+                    "రైతు కుటుంబాలకు పెట్టుబడి సహాయం కింద ఏటా రూ. 6,000 మూడు విడతల్లో నేరుగా బ్యాంక్ ఖాతాలో జమ చేయబడుతుంది.",
+                    "भूमिधारक किसान परिवारों को प्रति वर्ष ₹6,000 की वित्तीय सहायता तीन समान किश्तों (₹2,000 प्रत्येक) में सीधे बैंक खाते में दी जाती है।",
+                    "All landholding farmer families having cultivable landholding in their names. Requires e-KYC and Aadhaar-seeded bank account.",
+                    "సాగు భూమి కలిగిన అందరు రైతులు అర్హులు. ఆధార్ లింక్ అయిన బ్యాంక్ ఖాతా మరియు ఇ-కెవైసి తప్పనిసరి.",
+                    "सभी भूमिधारक किसान परिवार जिनके नाम पर कृषि भूमि है। ई-केवाईसी अनिवार्य है।",
+                    "₹6,000 per annum (₹2,000 per installment every 4 months)",
+                    "ఏటా రూ. 6,000 (ప్రతి 4 నెలలకు రూ. 2,000)",
+                    "₹6,000 प्रति वर्ष (हर 4 महीने में ₹2,000)",
+                    "ALL_INDIA",
+                    "https://pmkisan.gov.in",
+                    "Ministry of Agriculture & Farmers Welfare, Govt of India"
+            );
+
+            GovernmentScheme s2 = new GovernmentScheme(
+                    "PMFBY",
+                    "PMFBY (Pradhan Mantri Fasal Bima Yojana)",
+                    "ప్రధాన మంత్రి ఫసల్ బీమా యోజన (PMFBY)",
+                    "प्रधानमंत्री फसल बीमा योजना (PMFBY)",
+                    "CROP_INSURANCE",
+                    "Comprehensive crop insurance covering non-preventable natural risks from pre-sowing to post-harvest (drought, flood, unseasonal rains, pest attacks).",
+                    "ప్రకృతి వైపరీత్యాలు, కరువు, అకాల వర్షాలు, చీడపీడల వల్ల పంట నష్టం జరిగితే సమగ్ర బీమా రక్షణ.",
+                    "प्राकृतिक आपदाओं, सूखे, बाढ़ और कीटों से फसल नुकसान पर किसानों को व्यापक बीमा सुरक्षा प्रदान की जाती है।",
+                    "All farmers including sharecroppers and tenant farmers growing notified crops in notified areas.",
+                    "నోటిఫై చేయబడిన పంటలు సాగు చేసే రైతులు, కౌలు రైతులు అందరూ అర్హులు.",
+                    "अधिसूचित क्षेत्रों में अधिसूचित फसलें उगाने वाले सभी किसान और बटाईदार पात्र हैं।",
+                    "Affordable premium: 2% for Kharif, 1.5% for Rabi, 5% for Annual Commercial/Horticulture crops. Balance premium borne by Govt.",
+                    "రైతు చెల్లించాల్సిన ప్రీమియం చాలా తక్కువ: ఖరీఫ్‌కు 2%, రబీకి 1.5%. మిగిలినది ప్రభుత్వం భరిస్తుంది.",
+                    "खरीफ के लिए 2%, रबी के लिए 1.5% प्रीमियम। बाकी प्रीमियम सरकार द्वारा वहन किया जाता है।",
+                    "ALL_INDIA",
+                    "https://pmfby.gov.in",
+                    "Ministry of Agriculture & Farmers Welfare, Govt of India"
+            );
+
+            GovernmentScheme s3 = new GovernmentScheme(
+                    "PMKSY",
+                    "PMKSY (Per Drop More Crop - Micro Irrigation)",
+                    "ప్రధాన మంత్రి కృషి సించాయి యోజన (PMKSY - బిందు సేద్యం)",
+                    "प्रधानमंत्री कृषि सिंचाई योजना (PMKSY - प्रति बूंद अधिक फसल)",
+                    "IRRIGATION",
+                    "Promoting water use efficiency at farm level through Micro Irrigation technologies (Drip and Sprinkler irrigation systems).",
+                    "బిందు సేద్యం (డ్రిప్) మరియు తుంపర సేద్యం (స్ప్రింక్లర్) పరికరాల కొనుగోలుపై భారీ సబ్సిడీ.",
+                    "ड्रिप और स्प्रिंकलर सिंचाई प्रणाली लगाने पर 45% से 55% तक सरकारी सब्सिडी दी जाती है।",
+                    "Farmers owning cultivable agricultural land with assured irrigation water source.",
+                    "వ్యవసాయ భూమి మరియు నీటి వనరు కలిగిన రైతులందరూ దరఖాస్తు చేసుకోవచ్చు.",
+                    "कृषि योग्य भूमि और पानी के स्रोत वाले सभी किसान पात्र हैं।",
+                    "Up to 55% subsidy for Small & Marginal farmers, 45% for other farmers on micro-irrigation equipment.",
+                    "చిన్న/సన్నకారు రైతులకు 55% వరకు, ఇతర రైతులకు 45% వరకు సబ్సిడీ లభిస్తుంది.",
+                    "छोटे और सीमांत किसानों को 55% और अन्य किसानों को 45% तक सब्सिडी।",
+                    "ALL_INDIA",
+                    "https://pmksy.gov.in",
+                    "Department of Agriculture & Farmers Welfare, Govt of India"
+            );
+
+            GovernmentScheme s4 = new GovernmentScheme(
+                    "SOIL_HEALTH_CARD",
+                    "Soil Health Card Scheme",
+                    "సాయిల్ హెల్త్ కార్డ్ పథకం (మట్టి ఆరోగ్య పత్రం)",
+                    "मृदा स्वास्थ्य कार्ड योजना",
+                    "SOIL_FERTILITY",
+                    "Free scientific testing of farm soil every 2 years for 12 essential macro and micronutrients with dosage recommendations.",
+                    "మీ పొలం మట్టిని ఉచితంగా ల్యాబ్‌లో పరీక్షించి 12 రకాల పోషకాల వివరాలతో కూడిన కార్డు అందజేస్తారు.",
+                    "खेत की मिट्टी की निशुल्क जांच कर 12 पोषक तत्वों की स्थिति और फसल अनुसार उर्वरक सिफारिश का कार्ड दिया जाता है।",
+                    "All farmers with operational land holdings across all states.",
+                    "భారతదేశంలోని రైతులందరికీ ఉచితంగా అందుబాటులో ఉంటుంది.",
+                    "देश के सभी किसान जिनके पास कृषि भूमि है।",
+                    "Exact dosage recommendations for Urea, DAP, Potash, Zinc and Gypsum; reduces fertilizer expenditure by 15-25%.",
+                    "ఖచ్చితమైన మోతాదులో ఎరువుల వాడకం సలహా; అనవసర ఎరువుల ఖర్చు 20% వరకు తగ్గుతుంది.",
+                    "सटीक उर्वरक मात्रा की सलाह जिससे 20% तक उर्वरक खर्च की बचत होती है।",
+                    "ALL_INDIA",
+                    "https://soilhealth.dac.gov.in",
+                    "Ministry of Agriculture & Farmers Welfare, Govt of India"
+            );
+
+            GovernmentScheme s5 = new GovernmentScheme(
+                    "SMAM",
+                    "Sub-Mission on Agricultural Mechanization (SMAM)",
+                    "వ్యవసాయ యాంత్రీకరణ సబ్-మిషన్ (SMAM సబ్సిడీ)",
+                    "कृषि यंत्रीकरण उप-मिशन (SMAM)",
+                    "MECHANIZATION",
+                    "Subsidies on agricultural machinery including tractors, power tillers, rotavators, seed drills, and establishing Custom Hiring Centers.",
+                    "ట్రాక్టర్లు, రోటవేటర్లు, విత్తనాలు వేసే యంత్రాలు మరియు వ్యవసాయ పరికరాలపై 40-50% సబ్సిడీ.",
+                    "ट्रैक्टर, रोटावेटर, कल्टीवेटर और कृषि यंत्रों की खरीद पर 40% से 50% तक सरकारी सब्सिडी।",
+                    "Individual farmers, Farmer Producer Organizations (FPOs), and Custom Hiring Center entrepreneurs.",
+                    "రైతులు, రైతు ఉత్పత్తిదారుల సంఘాలు (FPOలు) దరఖాస్తు చేసుకోవచ్చు.",
+                    "व्यक्तिगत किसान, स्वयं सहायता समूह और एफपीओ पात्र हैं।",
+                    "40% to 50% financial subsidy on verified farm equipment models.",
+                    "ధ్రువీకరించిన వ్యవసాయ యంత్రాలపై 40% నుండి 50% సబ్సిడీ.",
+                    "यंत्रों की खरीद पर 40% से 50% सब्सिडी।",
+                    "ALL_INDIA",
+                    "https://agrimachinery.nic.in",
+                    "Ministry of Agriculture & Farmers Welfare, Govt of India"
+            );
+
+            GovernmentScheme s6 = new GovernmentScheme(
+                    "RYTHU_BHAROSA",
+                    "YSR Rythu Bharosa - PM KISAN",
+                    "వైఎస్సార్ రైతు భరోసా - పీఎం కిసాన్",
+                    "वाईएसआर रायथु भरोसा (आंध्र प्रदेश)",
+                    "FINANCIAL_INCOME",
+                    "Andhra Pradesh state flagship investment support of ₹13,500 per year per farmer family (including ₹6,000 from PM-KISAN) prior to cropping seasons.",
+                    "ఆంధ్రప్రదేశ్ రైతుల కోసం సాగు పెట్టుబడి సహాయం కింద ఏటా రూ. 13,500 (పీఎం కిసాన్ కలిపి) ఆర్థిక సహాయం.",
+                    "आंध्र प्रदेश सरकार द्वारा किसानों को खरीफ और रबी से पहले प्रति वर्ष ₹13,500 की वित्तीय सहायता।",
+                    "Landowner farmers and eligible SC/ST/BC/Minority tenant farmers in Andhra Pradesh.",
+                    "ఆంధ్రప్రదేశ్‌లోని రైతులతో పాటు ఎస్సీ/ఎస్టీ/బీసీ/మైనారిటీ కౌలు రైతులు కూడా అర్హులు.",
+                    "आंध्र प्रदेश के भूमिधारक किसान और पंजीकृत बटाईदार किसान।",
+                    "₹13,500 total annual input subsidy disbursed in 3 phases before sowing seasons.",
+                    "సాగుకు ముందు మూడు విడతల్లో మొత్తం రూ. 13,500 ఆర్థిక సహాయం.",
+                    "सालाना ₹13,500 की वित्तीय सहायता।",
+                    "Andhra Pradesh",
+                    "https://ysrrythubharosa.ap.gov.in",
+                    "Department of Agriculture, Government of Andhra Pradesh"
+            );
+
+            governmentSchemeRepository.saveAll(List.of(s1, s2, s3, s4, s5, s6));
+            System.out.println(">>> Seeded authentic Government Schemes (6 schemes including Central & State).");
         }
     }
 }

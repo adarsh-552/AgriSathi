@@ -1,4 +1,4 @@
-﻿{
+{
   "app_name": "AgriSathi",
   "app_tagline": "Your Farm. Our Support.",
   "app_motto": "किसान के लिए... किसान की भाषा में... किसान के साथ...",
@@ -72,5 +72,11 @@
   "nav_profile": "प्रोफ़ाइल",
   "admin_title": "Admin Dashboard",
   "welcome_admin": "Welcome, Admin 🛡️",
-  "crop_memory_title": "फसल डायरी (Crop Memory)"
+  "crop_memory_title": "फसल डायरी (Crop Memory)",
+  "schemes_title": "सरकारी योजनाएं",
+  "knowledge_title": "कृषि ज्ञान",
+  "alerts_title": "अलर्ट्स",
+  "escalation_title": "KVK विशेषज्ञ सलाह",
+  "add_crop": "नई फसल जोड़ें"
 }
+

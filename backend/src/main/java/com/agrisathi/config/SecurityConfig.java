@@ -45,6 +45,9 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/v1/auth/**").permitAll()
                 .requestMatchers("/api/v1/external/**").permitAll()
+                .requestMatchers("/api/v1/schemes/**").permitAll()
+                .requestMatchers("/api/v1/knowledge/**").permitAll()
+                .requestMatchers("/api/v1/crops/catalog").permitAll()
                 .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers("/", "/index.html", "/static/**", "/assets/**", "/*.png", "/*.jpg", "/*.svg", "/*.ico").permitAll()
                 .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")

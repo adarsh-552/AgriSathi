@@ -128,4 +128,193 @@ public class DTOs {
         public String getPayloadJson() { return payloadJson; }
         public void setPayloadJson(String payloadJson) { this.payloadJson = payloadJson; }
     }
+
+    public static class ProfileUpdateRequest {
+        private String fullName;
+        private String state;
+        private String district;
+        private String mandal;
+        private String village;
+        private String pincode;
+        private Double landAreaAcres;
+        private String soilType;
+        private String irrigationSource;
+        private String preferredLanguage;
+
+        public String getFullName() { return fullName; }
+        public void setFullName(String fullName) { this.fullName = fullName; }
+        public String getState() { return state; }
+        public void setState(String state) { this.state = state; }
+        public String getDistrict() { return district; }
+        public void setDistrict(String district) { this.district = district; }
+        public String getMandal() { return mandal; }
+        public void setMandal(String mandal) { this.mandal = mandal; }
+        public String getVillage() { return village; }
+        public void setVillage(String village) { this.village = village; }
+        public String getPincode() { return pincode; }
+        public void setPincode(String pincode) { this.pincode = pincode; }
+        public Double getLandAreaAcres() { return landAreaAcres; }
+        public void setLandAreaAcres(Double landAreaAcres) { this.landAreaAcres = landAreaAcres; }
+        public String getSoilType() { return soilType; }
+        public void setSoilType(String soilType) { this.soilType = soilType; }
+        public String getIrrigationSource() { return irrigationSource; }
+        public void setIrrigationSource(String irrigationSource) { this.irrigationSource = irrigationSource; }
+        public String getPreferredLanguage() { return preferredLanguage; }
+        public void setPreferredLanguage(String preferredLanguage) { this.preferredLanguage = preferredLanguage; }
+    }
+
+    public static class ProfileResponse {
+        private Long id;
+        private Long userId;
+        private String identifier;
+        private String fullName;
+        private String state;
+        private String district;
+        private String mandal;
+        private String village;
+        private String pincode;
+        private Double landAreaAcres;
+        private String soilType;
+        private String irrigationSource;
+        private String preferredLanguage;
+
+        public ProfileResponse() {}
+
+        public ProfileResponse(Long id, Long userId, String identifier, String fullName, String state, String district, String mandal, String village, String pincode, Double landAreaAcres, String soilType, String irrigationSource, String preferredLanguage) {
+            this.id = id;
+            this.userId = userId;
+            this.identifier = identifier;
+            this.fullName = fullName;
+            this.state = state;
+            this.district = district;
+            this.mandal = mandal;
+            this.village = village;
+            this.pincode = pincode;
+            this.landAreaAcres = landAreaAcres;
+            this.soilType = soilType;
+            this.irrigationSource = irrigationSource;
+            this.preferredLanguage = preferredLanguage;
+        }
+
+        public Long getId() { return id; }
+        public Long getUserId() { return userId; }
+        public String getIdentifier() { return identifier; }
+        public String getFullName() { return fullName; }
+        public String getState() { return state; }
+        public String getDistrict() { return district; }
+        public String getMandal() { return mandal; }
+        public String getVillage() { return village; }
+        public String getPincode() { return pincode; }
+        public Double getLandAreaAcres() { return landAreaAcres; }
+        public String getSoilType() { return soilType; }
+        public String getIrrigationSource() { return irrigationSource; }
+        public String getPreferredLanguage() { return preferredLanguage; }
+    }
+
+    public static class KvkEscalationRequest {
+        private String cropName;
+        private String issueCategory;
+        private String symptomsDescription;
+        private String urgency;
+        private String contactNumber;
+
+        public String getCropName() { return cropName; }
+        public void setCropName(String cropName) { this.cropName = cropName; }
+        public String getIssueCategory() { return issueCategory; }
+        public void setIssueCategory(String issueCategory) { this.issueCategory = issueCategory; }
+        public String getSymptomsDescription() { return symptomsDescription; }
+        public void setSymptomsDescription(String symptomsDescription) { this.symptomsDescription = symptomsDescription; }
+        public String getUrgency() { return urgency; }
+        public void setUrgency(String urgency) { this.urgency = urgency; }
+        public String getContactNumber() { return contactNumber; }
+        public void setContactNumber(String contactNumber) { this.contactNumber = contactNumber; }
+    }
+
+    public static class KvkEscalationResponse {
+        private Long id;
+        private String farmerName;
+        private String farmerState;
+        private String farmerDistrict;
+        private String cropName;
+        private String issueCategory;
+        private String symptomsDescription;
+        private String urgency;
+        private String status;
+        private String officerNotes;
+        private String contactNumber;
+        private String createdAt;
+
+        public KvkEscalationResponse() {}
+
+        public KvkEscalationResponse(Long id, String farmerName, String farmerState, String farmerDistrict, String cropName, String issueCategory, String symptomsDescription, String urgency, String status, String officerNotes, String contactNumber, String createdAt) {
+            this.id = id;
+            this.farmerName = farmerName;
+            this.farmerState = farmerState;
+            this.farmerDistrict = farmerDistrict;
+            this.cropName = cropName;
+            this.issueCategory = issueCategory;
+            this.symptomsDescription = symptomsDescription;
+            this.urgency = urgency;
+            this.status = status;
+            this.officerNotes = officerNotes;
+            this.contactNumber = contactNumber;
+            this.createdAt = createdAt;
+        }
+
+        public Long getId() { return id; }
+        public String getFarmerName() { return farmerName; }
+        public String getFarmerState() { return farmerState; }
+        public String getFarmerDistrict() { return farmerDistrict; }
+        public String getCropName() { return cropName; }
+        public String getIssueCategory() { return issueCategory; }
+        public String getSymptomsDescription() { return symptomsDescription; }
+        public String getUrgency() { return urgency; }
+        public String getStatus() { return status; }
+        public String getOfficerNotes() { return officerNotes; }
+        public String getContactNumber() { return contactNumber; }
+        public String getCreatedAt() { return createdAt; }
+    }
+
+    public static class AlertResponse {
+        private String id;
+        private String priority; // HIGH, MEDIUM, INFO
+        private String type; // WEATHER, SPRAY, IRRIGATION, TASK, GENERAL
+        private String titleEn;
+        private String titleTe;
+        private String titleHi;
+        private String messageEn;
+        private String messageTe;
+        private String messageHi;
+        private String actionLink; // e.g., "WEATHER", "JOURNEY", "SOLVER"
+        private String timestamp;
+
+        public AlertResponse() {}
+
+        public AlertResponse(String id, String priority, String type, String titleEn, String titleTe, String titleHi, String messageEn, String messageTe, String messageHi, String actionLink, String timestamp) {
+            this.id = id;
+            this.priority = priority;
+            this.type = type;
+            this.titleEn = titleEn;
+            this.titleTe = titleTe;
+            this.titleHi = titleHi;
+            this.messageEn = messageEn;
+            this.messageTe = messageTe;
+            this.messageHi = messageHi;
+            this.actionLink = actionLink;
+            this.timestamp = timestamp;
+        }
+
+        public String getId() { return id; }
+        public String getPriority() { return priority; }
+        public String getType() { return type; }
+        public String getTitleEn() { return titleEn; }
+        public String getTitleTe() { return titleTe; }
+        public String getTitleHi() { return titleHi; }
+        public String getMessageEn() { return messageEn; }
+        public String getMessageTe() { return messageTe; }
+        public String getMessageHi() { return messageHi; }
+        public String getActionLink() { return actionLink; }
+        public String getTimestamp() { return timestamp; }
+    }
 }
+

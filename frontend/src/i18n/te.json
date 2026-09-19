@@ -1,4 +1,4 @@
-﻿{
+{
   "app_name": "AgriSathi",
   "app_tagline": "Your Farm. Our Support.",
   "app_motto": "రైతు కోసం... రైతు భాషలో... రైతు తోడుగా...",
@@ -72,5 +72,11 @@
   "nav_profile": "ప్రొఫైల్",
   "admin_title": "Admin Dashboard",
   "welcome_admin": "Welcome, Admin 🛡️",
-  "crop_memory_title": "పంట జ్ఞాపక పుస్తకం (Crop Memory)"
+  "crop_memory_title": "పంట జ్ఞాపక పుస్తకం (Crop Memory)",
+  "schemes_title": "ప్రభుత్వ పథకాలు",
+  "knowledge_title": "వ్యవసాయ విజ్ఞానం",
+  "alerts_title": "హెచ్చరికలు",
+  "escalation_title": "KVK నిపుణుల సలహా",
+  "add_crop": "కొత్త పంటను నమోదు చేయండి"
 }
+

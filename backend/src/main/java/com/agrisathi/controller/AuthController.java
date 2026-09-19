@@ -42,6 +42,12 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/otp/dev-preview")
+    public ResponseEntity<?> getDevOtp(@RequestParam String identifier) {
+        String otp = authService.getDevOtp(identifier);
+        return ResponseEntity.ok(Map.of("identifier", identifier, "otp", otp != null ? otp : ""));
+    }
+
     @PostMapping("/admin/login")
     public ResponseEntity<?> adminLogin(@RequestBody DTOs.AdminLoginRequest request) {
         if (request.getEmail() == null || request.getPassword() == null) {

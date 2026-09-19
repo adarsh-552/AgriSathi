@@ -1,9 +1,9 @@
 import React from 'react';
-import { Globe, User, ShieldCheck } from 'lucide-react';
+import { Globe, User, ShieldCheck, Bell } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
 
-export default function HeaderBar({ title, onLanguageClick, onProfileClick }) {
+export default function HeaderBar({ title, onLanguageClick, onProfileClick, onAlertsClick }) {
   const { lang, supportedLanguages } = useLanguage();
   const { user, isAdmin } = useAuth();
 
@@ -33,6 +33,18 @@ export default function HeaderBar({ title, onLanguageClick, onProfileClick }) {
           <span>{currentLangObj ? currentLangObj.label : 'తెలుగు'}</span>
         </button>
 
+        {/* Alerts Bell */}
+        {onAlertsClick && (
+          <button
+            onClick={onAlertsClick}
+            className="w-8 h-8 rounded-full bg-forest-green-dark border border-green-600 flex items-center justify-center hover:bg-forest-green-light transition relative"
+            title="హెచ్చరికలు (Alerts)"
+          >
+            <Bell size={15} />
+            <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-amber-400 rounded-full border-2 border-forest-green animate-pulse" />
+          </button>
+        )}
+
         {/* Profile / Admin indicator */}
         <button
           onClick={onProfileClick}
@@ -45,3 +57,4 @@ export default function HeaderBar({ title, onLanguageClick, onProfileClick }) {
     </header>
   );
 }
+

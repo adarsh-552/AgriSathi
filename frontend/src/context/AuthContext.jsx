@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react'
 import { authService } from '../services/authService'
+import { profileService } from '../services/profileService'
 
 const AuthContext = createContext(null)
 
@@ -132,12 +133,39 @@ export function AuthProvider({ children }) {
   }, [parseToken, saveSession])
 
   /**
-   * Update locally-cached profile (called after profile setup)
+   * Update profile with backend persistence and local cache
    */
-  const updateProfile = useCallback((profileData) => {
-    setProfile(profileData)
-    localStorage.setItem(PROFILE_KEY, JSON.stringify(profileData))
-  }, [])
+  const updateProfile = useCallback(async (profileData) => {
+    try {
+      if (token) {
+        const persisted = await profileService.updateProfile(profileData)
+        setProfile(persisted)
+        localStorage.setItem(PROFILE_KEY, JSON.stringify(persisted))
+        return { success: true, data: persisted }
+      } else {
+        setProfile(profileData)
+        localStorage.setItem(PROFILE_KEY, JSON.stringify(profileData))
+        return { success: true, data: profileData }
+      }
+    } catch (err) {
+      // Graceful fallback to local state if offline/network error
+      setProfile(profileData)
+      localStorage.setItem(PROFILE_KEY, JSON.stringify(profileData))
+      return { success: true, data: profileData }
+    }
+  }, [token])
+
+  // Load profile from backend if authenticated
+  useEffect(() => {
+    if (token && isFarmer) {
+      profileService.getProfile()
+        .then((data) => {
+          setProfile(data)
+          localStorage.setItem(PROFILE_KEY, JSON.stringify(data))
+        })
+        .catch(() => {})
+    }
+  }, [token, isFarmer])
 
   const value = {
     token,

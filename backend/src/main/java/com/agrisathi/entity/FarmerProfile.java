@@ -37,6 +37,17 @@ public class FarmerProfile {
     @Column(length = 100)
     private String village;
 
+    @Column(length = 10)
+    private String pincode;
+
+    private Double landAreaAcres;
+
+    @Column(length = 50)
+    private String soilType; // e.g. "Black Cotton Soil", "Red Sandy Loam", "Alluvial Soil", "Clay Loam"
+
+    @Column(length = 50)
+    private String irrigationSource; // e.g. "Borewell", "Canal", "Drip Irrigation", "Rainfed"
+
     @Column(nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
@@ -75,6 +86,18 @@ public class FarmerProfile {
 
     public String getVillage() { return village; }
     public void setVillage(String village) { this.village = village; }
+
+    public String getPincode() { return pincode; }
+    public void setPincode(String pincode) { this.pincode = pincode; }
+
+    public Double getLandAreaAcres() { return landAreaAcres; }
+    public void setLandAreaAcres(Double landAreaAcres) { this.landAreaAcres = landAreaAcres; }
+
+    public String getSoilType() { return soilType; }
+    public void setSoilType(String soilType) { this.soilType = soilType; }
+
+    public String getIrrigationSource() { return irrigationSource; }
+    public void setIrrigationSource(String irrigationSource) { this.irrigationSource = irrigationSource; }
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }

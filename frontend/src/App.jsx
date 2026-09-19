@@ -23,16 +23,20 @@ import ExpertEscalationScreen from './screens/13_ExpertEscalationScreen';
 import FarmerProfileScreen from './screens/14_FarmerProfileScreen';
 import AdminLoginScreen from './screens/15_AdminLoginScreen';
 import AdminDashboardScreen from './screens/16_AdminDashboardScreen';
+import SchemesScreen from './screens/17_SchemesScreen';
+import KnowledgeScreen from './screens/18_KnowledgeScreen';
+import AlertsScreen from './screens/19_AlertsScreen';
 
 export default function App() {
   const { isAuthenticated, isAdmin, user } = useAuth();
   const { t } = useLanguage();
 
   // Navigation State
-  const [currentStep, setCurrentStep] = useState('splash'); // 'splash' | 'login' | 'otp' | 'lang_select' | 'loc_select' | 'main' | 'admin_login'
-  const [activeTab, setActiveTab] = useState('home'); // 'home' | 'journey' | 'solver' | 'memory' | 'weather' | 'market'
+  const [currentStep, setCurrentStep] = useState('splash'); // 'splash' | 'login' | 'otp' | 'lang_select' | 'loc_select' | 'main' | 'admin_login' | 'admin_dashboard'
+  const [activeTab, setActiveTab] = useState('home'); // 'home' | 'journey' | 'solver' | 'memory' | 'weather' | 'market' | 'schemes' | 'knowledge' | 'alerts' | 'escalation'
   const [loginIdentifier, setLoginIdentifier] = useState('');
   const [currentDiagnosis, setCurrentDiagnosis] = useState(null);
+  const [escalatePrefill, setEscalatePrefill] = useState({ crop: '', symptom: '' });
   const [showProfile, setShowProfile] = useState(false);
   const [showLanguageModal, setShowLanguageModal] = useState(false);
 
@@ -160,15 +164,19 @@ export default function App() {
       <HeaderBar
         title="AgriSathi"
         onLanguageClick={() => setShowLanguageModal(true)}
-        onProfileClick={() => setShowProfile(true)}
+        onProfileClick={() => {
+          if (isAdmin) setCurrentStep('admin_dashboard');
+          else setShowProfile(true);
+        }}
+        onAlertsClick={() => setActiveTab('alerts')}
       />
 
       <main className="min-h-[calc(100vh-4rem)]">
         {activeTab === 'home' && (
           <HomeScreen
             onNavigate={(tab) => {
-              if (tab === 'escalation') setActiveTab('solver_escalate');
-              else setActiveTab(tab);
+              if (tab === 'solver') setCurrentDiagnosis(null);
+              setActiveTab(tab);
             }}
           />
         )}
@@ -176,6 +184,10 @@ export default function App() {
         {activeTab === 'journey' && (
           <CropJourneyScreen
             onStartNewCrop={() => setActiveTab('home')}
+            onNavigateToSolver={() => {
+              setCurrentDiagnosis(null);
+              setActiveTab('solver');
+            }}
           />
         )}
 
@@ -184,12 +196,19 @@ export default function App() {
             <DiagnosisResultScreen
               diagnosis={currentDiagnosis}
               onBack={() => setCurrentDiagnosis(null)}
-              onEscalateClick={() => setActiveTab('solver_escalate')}
+              onEscalateClick={(cause) => {
+                setEscalatePrefill({
+                  crop: 'పత్తి (Cotton)',
+                  symptom: cause ? `లక్షణం / అనుమానం: ${cause}` : '',
+                });
+                setActiveTab('escalation');
+              }}
+              onNavigateToKnowledge={() => setActiveTab('knowledge')}
             />
           ) : (
             <ProblemSolverScreen
               onDiagnosed={handleDiagnosed}
-              onEscalateClick={() => setActiveTab('solver_escalate')}
+              onEscalateClick={() => setActiveTab('escalation')}
             />
           )
         )}
@@ -199,20 +218,61 @@ export default function App() {
         )}
 
         {activeTab === 'weather' && (
-          <WeatherForecastScreen onBack={() => setActiveTab('home')} />
+          <WeatherForecastScreen
+            onBack={() => setActiveTab('home')}
+            onNavigateToAlerts={() => setActiveTab('alerts')}
+          />
         )}
 
         {activeTab === 'market' && (
           <MandiPricesScreen onBack={() => setActiveTab('home')} />
         )}
 
-        {activeTab === 'solver_escalate' && (
-          <ExpertEscalationScreen onBack={() => setActiveTab('solver')} />
+        {activeTab === 'schemes' && (
+          <SchemesScreen onBack={() => setActiveTab('home')} />
+        )}
+
+        {activeTab === 'knowledge' && (
+          <KnowledgeScreen
+            onBack={() => setActiveTab('home')}
+            onNavigateToSolver={() => {
+              setCurrentDiagnosis(null);
+              setActiveTab('solver');
+            }}
+            onNavigateToKvk={() => setActiveTab('escalation')}
+          />
+        )}
+
+        {activeTab === 'alerts' && (
+          <AlertsScreen
+            onBack={() => setActiveTab('home')}
+            onNavigate={(link) => {
+              if (link === 'WEATHER') setActiveTab('weather');
+              else if (link === 'JOURNEY') setActiveTab('journey');
+              else if (link === 'SCHEMES') setActiveTab('schemes');
+              else if (link === 'SOLVER') {
+                setCurrentDiagnosis(null);
+                setActiveTab('solver');
+              } else setActiveTab('home');
+            }}
+          />
+        )}
+
+        {activeTab === 'escalation' && (
+          <ExpertEscalationScreen
+            onBack={() => setActiveTab('home')}
+            prefillCrop={escalatePrefill.crop}
+            prefillSymptom={escalatePrefill.symptom}
+          />
         )}
       </main>
 
       <BottomNav
-        activeTab={activeTab === 'solver_escalate' ? 'solver' : activeTab}
+        activeTab={
+          activeTab === 'schemes' || activeTab === 'knowledge' || activeTab === 'alerts' || activeTab === 'escalation'
+            ? 'home'
+            : activeTab
+        }
         onSelectTab={(tab) => {
           setCurrentDiagnosis(null);
           setActiveTab(tab);

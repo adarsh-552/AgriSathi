@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface AgricultureContentRepository extends JpaRepository<AgricultureContent, Long> {
     Optional<AgricultureContent> findByContentCode(String contentCode);
     List<AgricultureContent> findByVerificationStatus(String verificationStatus);
+    List<AgricultureContent> findByVerificationStatusOrderByUpdatedAtDesc(String verificationStatus);
 }

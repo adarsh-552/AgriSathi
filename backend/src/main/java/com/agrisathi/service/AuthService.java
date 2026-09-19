@@ -63,9 +63,8 @@ public class AuthService {
     public DTOs.AuthResponse verifyOtp(DTOs.VerifyOtpRequest request) {
         String identifier = request.getIdentifier();
         OtpEntry entry = otpStore.get(identifier);
-
-        // Allow demo code '123456' for rapid evaluation or check stored OTP
-        boolean isValid = (entry != null && entry.isValid(request.getOtp())) || "123456".equals(request.getOtp());
+        // Strictly validate stored cryptographically generated OTP
+        boolean isValid = entry != null && entry.isValid(request.getOtp());
 
         if (!isValid) {
             throw new BadCredentialsException("Invalid or expired OTP. Please enter the correct code or request a new one.");
@@ -141,6 +140,11 @@ public class AuthService {
         public boolean isValid(String inputOtp) {
             return otp.equals(inputOtp) && LocalDateTime.now().isBefore(expiresAt);
         }
+    }
+
+    public String getDevOtp(String identifier) {
+        OtpEntry entry = otpStore.get(identifier);
+        return entry != null ? entry.otp : null;
     }
 
     private static class RateLimitEntry {

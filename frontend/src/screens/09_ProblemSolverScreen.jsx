@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { AlertCircle, Camera, Check, ShieldAlert, ArrowRight, HelpCircle } from 'lucide-react';
+import { AlertCircle, ShieldAlert, ArrowRight, Check, Droplets } from 'lucide-react';
 import { useCrop } from '../context/CropContext';
 import { diagnosticService } from '../services/diagnosticService';
 
 export default function ProblemSolverScreen({ onDiagnosed, onEscalateClick }) {
   const { dashboard } = useCrop();
   const [symptomCategory, setSymptomCategory] = useState('LEAF_YELLOWING');
-  const [symptomLocation, setSymptomLocation] = useState('LOWER_LEAVES');
+  const [symptomLocation, setSymptomLocation] = useState('LOWER_OLD_LEAVES');
+  const [soilWaterlogged, setSoilWaterlogged] = useState(false);
   const [description, setDescription] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -20,82 +21,91 @@ export default function ProblemSolverScreen({ onDiagnosed, onEscalateClick }) {
       const result = await diagnosticService.evaluateProblem(cropId, {
         symptomCategory,
         symptomLocation,
-        description: description || 'ఆకులు పసుపు రంగులోకి మారుతున్నాయి',
-        affectedAreaFraction: 0.15,
+        soilWaterlogged,
+        description: description || 'పంట ఆకులపై లక్షణాలు గమనించబడ్డాయి',
       });
       onDiagnosed(result);
     } catch (err) {
       console.error(err);
-      alert('సమస్య విశ్లేషణ విఫలమైంది. మళ్ళీ ప్రయత్నించండి.');
+      alert('సమస్య విశ్లేషణ విఫలమైంది. దయచేసి మళ్ళీ ప్రయత్నించండి.');
     } finally {
       setLoading(false);
     }
   };
 
+  const categories = [
+    { id: 'LEAF_YELLOWING', label: 'ఆకులు పసుపు పారడం (Yellowing)', desc: 'నత్రజని / జింక్ లోపం లేదా వైరస్', icon: '🍂' },
+    { id: 'SUCKING_PEST', label: 'రసం పీల్చే పురుగులు (Sucking Pests)', desc: 'తామర, తెల్లదోమ, పేనుబంక, ఆకు ముడుత', icon: '🐛' },
+    { id: 'WILTING', label: 'మొక్క వడలిపోవడం (Wilting)', desc: 'వేరుకుళ్లు లేదా శిలీంధ్ర దాడి', icon: '🥀' },
+    { id: 'BOLL_DAMAGE', label: 'కాయ తొలుచు పురుగు (Bollworm)', desc: 'గులాబీ రంగు పురుగు, పూత/కాయ రాలడం', icon: '🌰' },
+    { id: 'LEAF_SPOT', label: 'ఆకుమచ్చ తెగులు (Leaf Spot/Blight)', desc: 'ఆకులపై గోధుమ/నలుపు వలయాల మచ్చలు', icon: '🟤' },
+  ];
+
   return (
-    <div className="p-4 pb-20 space-y-4">
+    <div className="p-4 pb-24 space-y-4">
       {/* Title */}
       <div>
-        <h2 className="text-xl font-black text-gray-900">సమస్య పరిష్కారి (Problem Solver)</h2>
+        <h2 className="text-xl font-black text-gray-900">సమస్య పరిష్కారి (Diagnostic Safety Gate)</h2>
         <p className="text-xs text-gray-500">
-          లక్షణాలు చెప్పండి. పంట జ్ఞాపకాల ఆధారంగా సురక్షిత పరిష్కారం పొందండి.
+          లక్షణాలు చెప్పండి. పంట జ్ఞాపకాల ఆధారంగా సురక్షిత IPM పరిష్కారం పొందండి.
         </p>
       </div>
 
-      {/* Safety Gate Guarantee Banner: Requirement 7 */}
+      {/* Safety Gate Guarantee Banner */}
       <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-3.5 flex items-start space-x-3">
         <ShieldAlert size={20} className="text-forest-green flex-shrink-0 mt-0.5" />
-        <div className="text-xs text-emerald-900 leading-relaxed">
-          <strong>భద్రతా హామీ (Safety Gate):</strong> మేము వెంటనే ఖరీదైన విష రసాయనాలను సిఫార్సు చేయము. మొదట సేంద్రీయ, నిర్వహణ పద్ధతులను మాత్రమే సూచిస్తాము.
+        <div className="text-xs text-emerald-950 leading-relaxed">
+          <strong>భద్రతా హామీ (Safety Gate):</strong> మేము నేరుగా ఖరీదైన విష రసాయనాలను సిఫార్సు చేయము. మొదట సేంద్రీయ, నిర్వహణ పద్ధతులు (IPM) మరియు CIBRC నిబంధనల ప్రకారమే సూచనలు ఇస్తాము.
         </div>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Step 1: Category */}
-        <div className="bg-white rounded-2xl p-4 shadow-card border border-gray-100">
+        <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-200">
           <label className="block text-xs font-bold text-gray-700 uppercase mb-3">
-            1. సమస్య లక్షణం ఏమిటి? (Symptom Category)
+            1. సమస్య ప్రధాన లక్షణం ఏమిటి? (Symptom Category)
           </label>
-          <div className="grid grid-cols-2 gap-2">
-            {[
-              { id: 'LEAF_YELLOWING', label: 'ఆకులు పసుపు పారడం', icon: '🍂' },
-              { id: 'SUCKING_PEST', label: 'రసం పీల్చే పురుగులు', icon: '🐛' },
-              { id: 'WILTING', label: 'మొక్క వడలిపోవడం', icon: '🥀' },
-              { id: 'BOLL_ROT', label: 'కాయ కుళ్లు / మచ్చలు', icon: '🟤' },
-            ].map((opt) => (
+          <div className="space-y-2">
+            {categories.map((opt) => (
               <button
                 type="button"
                 key={opt.id}
                 onClick={() => setSymptomCategory(opt.id)}
-                className={`p-3 rounded-xl border text-left flex items-center space-x-2 transition ${
+                className={`w-full p-3 rounded-xl border text-left flex items-start space-x-3 transition ${
                   symptomCategory === opt.id
-                    ? 'border-forest-green bg-green-50/50 shadow-sm font-bold text-forest-green'
+                    ? 'border-forest-green bg-emerald-50/50 shadow-sm font-bold text-forest-green'
                     : 'border-gray-200 text-gray-700 hover:border-gray-300'
                 }`}
               >
-                <span className="text-lg">{opt.icon}</span>
-                <span className="text-xs">{opt.label}</span>
+                <span className="text-2xl mt-0.5">{opt.icon}</span>
+                <div className="flex-1">
+                  <div className="text-xs font-bold text-gray-900">{opt.label}</div>
+                  <div className="text-[11px] text-gray-500 font-normal">{opt.desc}</div>
+                </div>
+                {symptomCategory === opt.id && (
+                  <Check size={16} className="text-forest-green mt-1" />
+                )}
               </button>
             ))}
           </div>
         </div>
 
         {/* Step 2: Affected Plant Part */}
-        <div className="bg-white rounded-2xl p-4 shadow-card border border-gray-100">
+        <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-200">
           <label className="block text-xs font-bold text-gray-700 uppercase mb-3">
             2. మొక్కలో ఏ భాగంలో కనిపిస్తోంది? (Location)
           </label>
           <div className="space-y-2">
             {[
-              { id: 'LOWER_LEAVES', label: 'క్రింది ఆకుల్లో మాత్రమే (దిగువ భాగం)' },
-              { id: 'UPPER_LEAVES', label: 'కొత్తగా వచ్చిన పై చిగురు ఆకుల్లో' },
-              { id: 'WHOLE_PLANT', label: 'మొత్తం మొక్క అంతటా ఒకేసారి' },
+              { id: 'LOWER_OLD_LEAVES', label: 'క్రింది పాత ఆకుల్లో మాత్రమే (దిగువ భాగం)' },
+              { id: 'UPPER_NEW_LEAVES', label: 'కొత్తగా వచ్చిన పై చిగురు ఆకుల్లో' },
+              { id: 'WHOLE_PLANT', label: 'మొత్తం మొక్క అంతటా లేదా కాండం/కాయలపై' },
             ].map((opt) => (
               <label
                 key={opt.id}
                 className={`flex items-center justify-between p-3 rounded-xl border cursor-pointer transition ${
                   symptomLocation === opt.id
-                    ? 'border-forest-green bg-green-50/50'
+                    ? 'border-forest-green bg-emerald-50/50'
                     : 'border-gray-200 hover:border-gray-300'
                 }`}
               >
@@ -113,29 +123,47 @@ export default function ProblemSolverScreen({ onDiagnosed, onEscalateClick }) {
           </div>
         </div>
 
-        {/* Optional photo / description note: Requirement 9 */}
-        <div className="bg-white rounded-2xl p-4 shadow-card border border-gray-100">
+        {/* Step 3: Soil Moisture / Waterlogging */}
+        <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-200">
+          <label className="flex items-center space-x-3 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={soilWaterlogged}
+              onChange={(e) => setSoilWaterlogged(e.target.checked)}
+              className="w-4 h-4 rounded text-forest-green accent-forest-green"
+            />
+            <div>
+              <div className="text-xs font-bold text-gray-900 flex items-center gap-1">
+                <Droplets size={14} className="text-blue-500" />
+                <span>పొలంలో నీరు నిలిచి ఉందా? లేదా ఇటీవల భారీ వర్షం పడిందా?</span>
+              </div>
+              <p className="text-[11px] text-gray-500 mt-0.5">
+                నీటి నిల్వ వల్ల వేర్లు ఊపిరాడక పసుపు రంగులోకి మారే అవకాశం ఉంది.
+              </p>
+            </div>
+          </label>
+        </div>
+
+        {/* Optional photo / description note */}
+        <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-200">
           <label className="block text-xs font-bold text-gray-700 uppercase mb-2">
             3. అదనపు వివరాలు (ఐచ్ఛికం)
           </label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            placeholder="ఎన్ని రోజులుగా ఈ సమస్య ఉంది? ఏవైనా ప్రత్యేక లక్షణాలు ఉన్నాయా..."
+            placeholder="ఎన్ని రోజులుగా ఈ సమస్య ఉంది? పురుగులు లేదా మచ్చలు ఏవైనా ప్రత్యేకంగా కనిపించాయా..."
             className="input-field h-20 text-xs"
           />
-          <div className="mt-2 text-[11px] text-gray-400 italic">
-            గమనిక: ఫోటో లేదా వివరణ మాత్రమే 100% వ్యాధిని ఖరారు చేయదు; క్షేత్ర పరిశీలన ముఖ్యం.
-          </div>
         </div>
 
         {/* Submit */}
         <button
           type="submit"
           disabled={loading}
-          className="btn-primary flex items-center justify-center space-x-2"
+          className="w-full py-3 bg-forest-green hover:bg-forest-green-light text-white font-bold text-xs rounded-xl shadow flex items-center justify-center space-x-2 transition disabled:opacity-50"
         >
-          <span>{loading ? 'విశ్లేషిస్తోంది...' : 'పరిష్కారాన్ని చూడండి (Analyze Problem)'}</span>
+          <span>{loading ? 'విశ్లేషిస్తోంది...' : 'సురక్షిత పరిష్కారాన్ని చూడండి (Analyze Problem)'}</span>
           <ArrowRight size={18} />
         </button>
       </form>
