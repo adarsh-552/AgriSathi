@@ -79,8 +79,8 @@ export function AuthProvider({ children }) {
     setLoading(true)
     setError(null)
     try {
-      await authService.requestOtp(identifier)
-      return { success: true }
+      const data = await authService.requestOtp(identifier)
+      return { success: true, devOtp: data?.devOtp }
     } catch (err) {
       const msg = err.response?.data?.error || err.response?.data?.message || 'OTP request failed'
       setError(msg)

@@ -3,10 +3,10 @@ import { ArrowLeft, CheckCircle2, RefreshCw, KeyRound } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { authService } from '../services/authService';
 
-export default function OtpScreen({ identifier, onVerified, onBack }) {
+export default function OtpScreen({ identifier, initialDevOtp = '', onVerified, onBack }) {
   const [otp, setOtp] = useState('');
   const [localError, setLocalError] = useState('');
-  const [devOtp, setDevOtp] = useState('');
+  const [devOtp, setDevOtp] = useState(initialDevOtp || '');
   const { verifyOtp, requestOtp, loading } = useAuth();
 
   const fetchDevOtp = async () => {
@@ -21,8 +21,11 @@ export default function OtpScreen({ identifier, onVerified, onBack }) {
   };
 
   useEffect(() => {
+    if (initialDevOtp) {
+      setDevOtp(initialDevOtp);
+    }
     fetchDevOtp();
-  }, [identifier]);
+  }, [identifier, initialDevOtp]);
 
   const handleVerify = async (e) => {
     e.preventDefault();

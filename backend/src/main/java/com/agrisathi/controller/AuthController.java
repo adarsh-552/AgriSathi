@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -32,7 +33,13 @@ public class AuthController {
         }
         try {
             String msg = authService.generateAndSendOtp(identifier);
-            return ResponseEntity.ok(Map.of("message", msg, "identifier", identifier));
+            Map<String, Object> resp = new HashMap<>();
+            resp.put("message", msg);
+            resp.put("identifier", identifier);
+            if (environment.matchesProfiles("dev", "test")) {
+                resp.put("devOtp", authService.getDevOtp(identifier));
+            }
+            return ResponseEntity.ok(resp);
         } catch (IllegalStateException ex) {
             return ResponseEntity.status(429).body(Map.of("error", ex.getMessage()));
         }

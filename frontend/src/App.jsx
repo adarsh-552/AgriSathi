@@ -35,6 +35,7 @@ export default function App() {
   const [currentStep, setCurrentStep] = useState('splash'); // 'splash' | 'login' | 'otp' | 'lang_select' | 'loc_select' | 'main' | 'admin_login' | 'admin_dashboard'
   const [activeTab, setActiveTab] = useState('home'); // 'home' | 'journey' | 'solver' | 'memory' | 'weather' | 'market' | 'schemes' | 'knowledge' | 'alerts' | 'escalation'
   const [loginIdentifier, setLoginIdentifier] = useState('');
+  const [devOtpCode, setDevOtpCode] = useState('');
   const [currentDiagnosis, setCurrentDiagnosis] = useState(null);
   const [escalatePrefill, setEscalatePrefill] = useState({ crop: '', symptom: '' });
   const [showProfile, setShowProfile] = useState(false);
@@ -54,8 +55,9 @@ export default function App() {
   };
 
   // Login -> OTP
-  const handleOtpRequested = (identifier) => {
+  const handleOtpRequested = (identifier, devOtp) => {
     setLoginIdentifier(identifier);
+    if (devOtp) setDevOtpCode(devOtp);
     setCurrentStep('otp');
   };
 
@@ -107,6 +109,7 @@ export default function App() {
     return (
       <OtpScreen
         identifier={loginIdentifier}
+        initialDevOtp={devOtpCode}
         onVerified={handleOtpVerified}
         onBack={() => setCurrentStep('login')}
       />

@@ -28,7 +28,7 @@ export default function LoginScreen({ onOtpRequested, onAdminLoginClick }) {
 
     const res = await requestOtp(clean);
     if (res.success) {
-      onOtpRequested(clean);
+      onOtpRequested(clean, res.devOtp);
     } else {
       setLocalError(res.message || 'OTP పంపడం విఫలమైంది');
     }
