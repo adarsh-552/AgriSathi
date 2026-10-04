@@ -11,7 +11,7 @@ export default function ProblemSolverScreen({ onDiagnosed, onEscalateClick }) {
   const [description, setDescription] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const cropId = dashboard?.farmerCrop?.id || 1;
+  const cropId = dashboard?.farmerCropId || dashboard?.farmerCrop?.id || 1;
 
   const handleSubmit = async (e) => {
     e.preventDefault();

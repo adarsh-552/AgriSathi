@@ -2,7 +2,10 @@ package com.agrisathi.controller;
 
 import com.agrisathi.dto.DTOs;
 import com.agrisathi.service.AuthService;
+import org.springframework.core.env.Environment;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -12,9 +15,11 @@ import java.util.Map;
 public class AuthController {
 
     private final AuthService authService;
+    private final Environment environment;
 
-    public AuthController(AuthService authService) {
+    public AuthController(AuthService authService, Environment environment) {
         this.authService = authService;
+        this.environment = environment;
     }
 
     @PostMapping("/otp/request")
@@ -38,14 +43,28 @@ public class AuthController {
         if (request.getIdentifier() == null || request.getOtp() == null) {
             return ResponseEntity.badRequest().body(Map.of("error", "Identifier and OTP are required."));
         }
-        DTOs.AuthResponse response = authService.verifyOtp(request);
-        return ResponseEntity.ok(response);
+        try {
+            DTOs.AuthResponse response = authService.verifyOtp(request);
+            return ResponseEntity.ok(response);
+        } catch (BadCredentialsException ex) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", ex.getMessage()));
+        }
     }
 
     @GetMapping("/otp/dev-preview")
     public ResponseEntity<?> getDevOtp(@RequestParam String identifier) {
+        // Restricted to dev or test profiles only
+        boolean isDevOrTest = environment.matchesProfiles("dev", "test");
+        if (!isDevOrTest) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(Map.of("error", "Dev OTP preview is disabled in production environments."));
+        }
         String otp = authService.getDevOtp(identifier);
-        return ResponseEntity.ok(Map.of("identifier", identifier, "otp", otp != null ? otp : ""));
+        if (otp == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "No active OTP found for this identifier or it has expired."));
+        }
+        return ResponseEntity.ok(Map.of("identifier", identifier, "otp", otp));
     }
 
     @PostMapping("/admin/login")
@@ -53,7 +72,16 @@ public class AuthController {
         if (request.getEmail() == null || request.getPassword() == null) {
             return ResponseEntity.badRequest().body(Map.of("error", "Email and password are required."));
         }
-        DTOs.AuthResponse response = authService.adminLogin(request);
-        return ResponseEntity.ok(response);
+        try {
+            DTOs.AuthResponse response = authService.adminLogin(request);
+            return ResponseEntity.ok(response);
+        } catch (BadCredentialsException ex) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", ex.getMessage()));
+        }
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<?> handleBadCredentials(BadCredentialsException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", ex.getMessage()));
     }
 }

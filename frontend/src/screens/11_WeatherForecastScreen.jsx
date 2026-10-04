@@ -28,6 +28,12 @@ export default function WeatherForecastScreen({ onBack, onNavigateToAlerts }) {
   };
 
   useEffect(() => {
+    if (profile?.district) {
+      setDistrict(profile.district);
+    }
+  }, [profile?.district]);
+
+  useEffect(() => {
     fetchWeather(district);
   }, [district]);
 
@@ -67,9 +73,9 @@ export default function WeatherForecastScreen({ onBack, onNavigateToAlerts }) {
                 onChange={(e) => setDistrict(e.target.value)}
                 className="bg-transparent font-bold text-forest-green underline focus:outline-none cursor-pointer"
               >
-                {['Kurnool', 'Guntur', 'Anantapur', 'Warangal', 'Nalgonda', 'Khammam', 'Karimnagar', 'Krishna'].map((d) => (
+                {Array.from(new Set([district, 'Kurnool', 'Guntur', 'Anantapur', 'Warangal', 'Nalgonda', 'Khammam', 'Karimnagar', 'Krishna'])).filter(Boolean).map((d) => (
                   <option key={d} value={d} className="text-gray-900 font-normal">
-                    {d} జిల్లా
+                    {d}
                   </option>
                 ))}
               </select>

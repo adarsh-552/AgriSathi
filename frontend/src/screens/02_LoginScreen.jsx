@@ -19,6 +19,13 @@ export default function LoginScreen({ onOtpRequested, onAdminLoginClick }) {
       return;
     }
 
+    const isMobile = /^[6-9]\d{9}$/.test(clean);
+    const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(clean);
+    if (!isMobile && !isEmail) {
+      setLocalError('దయచేసి సరైన 10-అంకెల మొబైల్ నంబర్ (6-9 తో ప్రారంభం) నమోదు చేయండి (Enter valid 10-digit mobile number starting with 6-9, or valid email)');
+      return;
+    }
+
     const res = await requestOtp(clean);
     if (res.success) {
       onOtpRequested(clean);

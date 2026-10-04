@@ -16,9 +16,28 @@ export default function LocationScreen({ onLocationCompleted }) {
   const [irrigationSource, setIrrigationSource] = useState(profile?.irrigationSource || 'Borewell / Tube well');
 
   const [availableDistricts, setAvailableDistricts] = useState(() => getDistrictsForState(state));
+  const [userHasEdited, setUserHasEdited] = useState(false);
+
+  useEffect(() => {
+    if (profile && !userHasEdited) {
+      if (profile.state) {
+        setState(profile.state);
+        const dists = getDistrictsForState(profile.state);
+        setAvailableDistricts(dists);
+        if (profile.district) setDistrict(profile.district);
+      }
+      if (profile.mandal) setMandal(profile.mandal);
+      if (profile.village) setVillage(profile.village);
+      if (profile.pincode) setPincode(profile.pincode);
+      if (profile.landAreaAcres) setLandAreaAcres(profile.landAreaAcres);
+      if (profile.soilType) setSoilType(profile.soilType);
+      if (profile.irrigationSource) setIrrigationSource(profile.irrigationSource);
+    }
+  }, [profile, userHasEdited]);
 
   // Whenever state changes, update available districts
   const handleStateChange = (newState) => {
+    setUserHasEdited(true);
     setState(newState);
     const districts = getDistrictsForState(newState);
     setAvailableDistricts(districts);
@@ -81,7 +100,10 @@ export default function LocationScreen({ onLocationCompleted }) {
             </label>
             <select
               value={district}
-              onChange={(e) => setDistrict(e.target.value)}
+              onChange={(e) => {
+                setUserHasEdited(true);
+                setDistrict(e.target.value);
+              }}
               className="input-field bg-white font-medium text-xs py-2.5"
             >
               {availableDistricts.map((d) => (

@@ -84,13 +84,15 @@ export default function HomeScreen({ onNavigate }) {
         <div className="flex justify-between items-center mb-3">
           <div className="flex items-center space-x-2">
             <span className="text-xl">🌱</span>
-            <h2 className="font-bold text-gray-900 text-sm">ప్రస్తుత పంట (Active Crop)</h2>
+            <h2 className="font-bold text-gray-900 text-sm">
+              {lang === 'hi' ? 'वर्तमान फसल' : lang === 'en' ? 'Active Crop' : 'ప్రస్తుత పంట (Active Crop)'}
+            </h2>
           </div>
           <button
             onClick={() => onNavigate('journey')}
             className="text-xs font-bold text-forest-green flex items-center hover:underline"
           >
-            <span>పూర్తి వివరాలు &rarr;</span>
+            <span>{lang === 'hi' ? 'पूर्ण विवरण →' : lang === 'en' ? 'View Details →' : 'పూర్తి వివరాలు →'}</span>
           </button>
         </div>
 
@@ -102,15 +104,16 @@ export default function HomeScreen({ onNavigate }) {
             >
               <div>
                 <span className="text-base font-black text-forest-green">
-                  {cropName || 'పత్తి (Cotton)'}
+                  {cropName || 'Cotton (పత్తి)'}
                 </span>
                 <p className="text-xs text-gray-600 mt-0.5">
-                  {dashboard.plotIdentifier || 'Plot 1'} • వయస్సు: <strong>{dashboard.cropAgeDays || 45} రోజులు</strong>
+                  {dashboard.plotIdentifier || 'Plot 1'} • {lang === 'hi' ? 'आयु: ' : lang === 'en' ? 'Age: ' : 'వయస్సు: '}
+                  <strong>{dashboard.cropAgeDays || 45} {lang === 'hi' ? 'दिन' : lang === 'en' ? 'days' : 'రోజులు'}</strong>
                 </p>
               </div>
               <div className="text-right">
                 <span className="text-xs font-bold bg-forest-green text-white px-2.5 py-1 rounded-full inline-block shadow-sm">
-                  {stageName || 'పువ్వు పూసే దశ'}
+                  {stageName || (lang === 'hi' ? 'वृद्धि अवस्था' : lang === 'en' ? 'Active Stage' : 'పువ్వు పూసే దశ')}
                 </span>
                 {dashboard.accumulatedGdd && (
                   <div className="text-[10px] text-amber-700 font-bold mt-1">
@@ -127,7 +130,9 @@ export default function HomeScreen({ onNavigate }) {
                   ✓
                 </span>
                 <div>
-                  <span className="font-bold text-gray-800">నేటి ముఖ్యమైన పని: </span>
+                  <span className="font-bold text-gray-800">
+                    {lang === 'hi' ? 'आज का महत्वपूर्ण कार्य: ' : lang === 'en' ? "Today's Task: " : 'నేటి ముఖ్యమైన పని: '}
+                  </span>
                   <span className="text-gray-700">
                     {lang === 'hi' ? dashboard.todayTaskNameHi : lang === 'en' ? dashboard.todayTaskNameEn : dashboard.todayTaskNameTe}
                   </span>
@@ -137,13 +142,15 @@ export default function HomeScreen({ onNavigate }) {
           </div>
         ) : (
           <div className="text-center py-6 bg-gray-50 rounded-xl border border-dashed border-gray-300">
-            <p className="text-xs text-gray-600 mb-2">మీరు ఇంకా పంట ప్రయాణాన్ని ప్రారంభించలేదు</p>
+            <p className="text-xs text-gray-600 mb-2">
+              {lang === 'hi' ? 'आपने अभी तक कोई फसल नहीं जोड़ी है' : lang === 'en' ? 'No active crop added yet' : 'మీరు ఇంకా పంట ప్రయాణాన్ని ప్రారంభించలేదు'}
+            </p>
             <button
               onClick={() => onNavigate('journey')}
               className="px-4 py-2 bg-forest-green hover:bg-forest-green-light text-white font-bold text-xs rounded-xl shadow inline-flex items-center space-x-1.5 transition"
             >
               <Plus size={14} />
-              <span>కొత్త పంటను నమోదు చేయండి (Add Crop)</span>
+              <span>{t('add_crop') || 'Add Crop Plot'}</span>
             </button>
           </div>
         )}
@@ -159,8 +166,12 @@ export default function HomeScreen({ onNavigate }) {
           <div className="w-10 h-10 rounded-xl bg-rose-500 text-white flex items-center justify-center mb-2 shadow">
             <AlertCircle size={22} />
           </div>
-          <h3 className="font-bold text-rose-950 text-xs">సమస్య పరిష్కారం</h3>
-          <p className="text-[10px] text-rose-700 mt-0.5">తెగుళ్ళ నిర్ధారణ & సేంద్రీయ సలహా</p>
+          <h3 className="font-bold text-rose-950 text-xs">
+            {lang === 'hi' ? 'समस्या समाधान' : lang === 'en' ? 'Problem Solver' : 'సమస్య పరిష్కారం'}
+          </h3>
+          <p className="text-[10px] text-rose-700 mt-0.5">
+            {lang === 'hi' ? 'कीट निदान एवं जैविक सलाह' : lang === 'en' ? 'Pest diagnosis & safe advice' : 'తెగుళ్ళ నిర్ధారణ & సేంద్రీయ సలహా'}
+          </p>
         </button>
 
         {/* 2. Crop Memory */}
@@ -171,8 +182,12 @@ export default function HomeScreen({ onNavigate }) {
           <div className="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center mb-2 shadow">
             <History size={22} />
           </div>
-          <h3 className="font-bold text-amber-950 text-xs">పంట జ్ఞాపకాలు</h3>
-          <p className="text-[10px] text-amber-700 mt-0.5">వర్షం, ఎరువులు, డైరీ రికార్డు</p>
+          <h3 className="font-bold text-amber-950 text-xs">
+            {lang === 'hi' ? 'फसल स्मृति (डायरी)' : lang === 'en' ? 'Crop Memory' : 'పంట జ్ఞాపకాలు'}
+          </h3>
+          <p className="text-[10px] text-amber-700 mt-0.5">
+            {lang === 'hi' ? 'वर्षा, उर्वरक एवं कार्य रिकॉर्ड' : lang === 'en' ? 'Rain, fertilizer & logs' : 'వర్షం, ఎరువులు, డైరీ రికార్డు'}
+          </p>
         </button>
 
         {/* 3. Govt Schemes */}
@@ -183,8 +198,12 @@ export default function HomeScreen({ onNavigate }) {
           <div className="w-10 h-10 rounded-xl bg-forest-green text-white flex items-center justify-center mb-2 shadow">
             <ShieldCheck size={22} />
           </div>
-          <h3 className="font-bold text-emerald-950 text-xs">ప్రభుత్వ పథకాలు</h3>
-          <p className="text-[10px] text-emerald-700 mt-0.5">PM-కిసాన్, బీమా & సబ్సిడీలు</p>
+          <h3 className="font-bold text-emerald-950 text-xs">
+            {lang === 'hi' ? 'सरकारी योजनाएं' : lang === 'en' ? 'Govt Schemes' : 'ప్రభుత్వ పథకాలు'}
+          </h3>
+          <p className="text-[10px] text-emerald-700 mt-0.5">
+            {lang === 'hi' ? 'पीएम-किसान, बीमा एवं सब्सिडी' : lang === 'en' ? 'PM-KISAN, insurance & subsidy' : 'PM-కిసాన్, బీమా & సబ్సిడీలు'}
+          </p>
         </button>
 
         {/* 4. ICAR Knowledge */}
@@ -195,8 +214,12 @@ export default function HomeScreen({ onNavigate }) {
           <div className="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center mb-2 shadow">
             <BookOpen size={22} />
           </div>
-          <h3 className="font-bold text-indigo-950 text-xs">వ్యవసాయ విజ్ఞానం</h3>
-          <p className="text-[10px] text-indigo-700 mt-0.5">ICAR శాస్త్రీయ ప్యాకేజ్ ఆఫ్ ప్రాక్టీస్</p>
+          <h3 className="font-bold text-indigo-950 text-xs">
+            {lang === 'hi' ? 'कृषि ज्ञान कोष' : lang === 'en' ? 'ICAR Knowledge' : 'వ్యవసాయ విజ్ఞానం'}
+          </h3>
+          <p className="text-[10px] text-indigo-700 mt-0.5">
+            {lang === 'hi' ? 'ICAR वैज्ञानिक पैकेज ऑफ प्रैक्टिसेज' : lang === 'en' ? 'ICAR scientific guidelines' : 'ICAR శాస్త్రీయ ప్యాకేజ్ ఆఫ్ ప్రాక్టీస్'}
+          </p>
         </button>
 
         {/* 5. Mandi Prices */}
@@ -207,8 +230,12 @@ export default function HomeScreen({ onNavigate }) {
           <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center mb-2 shadow">
             <TrendingUp size={22} />
           </div>
-          <h3 className="font-bold text-blue-950 text-xs">మార్కెట్ ధరలు</h3>
-          <p className="text-[10px] text-blue-700 mt-0.5">APMC లైవ్ క్వింటాల్ ధరలు</p>
+          <h3 className="font-bold text-blue-950 text-xs">
+            {lang === 'hi' ? 'मंडी भाव' : lang === 'en' ? 'Mandi Prices' : 'మార్కెట్ ధరలు'}
+          </h3>
+          <p className="text-[10px] text-blue-700 mt-0.5">
+            {lang === 'hi' ? 'APMC लाइव क्विंटल भाव' : lang === 'en' ? 'APMC live market rates' : 'APMC లైవ్ క్వింటాల్ ధరలు'}
+          </p>
         </button>
 
         {/* 6. KVK Scientist Escalation */}
@@ -219,8 +246,12 @@ export default function HomeScreen({ onNavigate }) {
           <div className="w-10 h-10 rounded-xl bg-teal-600 text-white flex items-center justify-center mb-2 shadow">
             <PhoneCall size={22} />
           </div>
-          <h3 className="font-bold text-teal-950 text-xs">KVK నిపుణుల సలహా</h3>
-          <p className="text-[10px] text-teal-700 mt-0.5">వ్యవసాయ శాస్త్రవేత్తకు టికెట్ పంపండి</p>
+          <h3 className="font-bold text-teal-950 text-xs">
+            {lang === 'hi' ? 'KVK वैज्ञानिक परामर्श' : lang === 'en' ? 'KVK Scientist Advice' : 'KVK నిపుణుల సలహా'}
+          </h3>
+          <p className="text-[10px] text-teal-700 mt-0.5">
+            {lang === 'hi' ? 'कृषि विशेषज्ञ को टिकट भेजें' : lang === 'en' ? 'Escalate to agriculture scientist' : 'వ్యవసాయ శాస్త్రవేత్తకు టికెట్ పంపండి'}
+          </p>
         </button>
       </div>
 

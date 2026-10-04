@@ -82,7 +82,7 @@ export function AuthProvider({ children }) {
       await authService.requestOtp(identifier)
       return { success: true }
     } catch (err) {
-      const msg = err.response?.data?.message || 'OTP request failed'
+      const msg = err.response?.data?.error || err.response?.data?.message || 'OTP request failed'
       setError(msg)
       return { success: false, message: msg }
     } finally {
@@ -103,7 +103,7 @@ export function AuthProvider({ children }) {
       saveSession(data.token, userInfo)
       return { success: true, data }
     } catch (err) {
-      const msg = err.response?.data?.message || 'OTP verification failed'
+      const msg = err.response?.data?.error || err.response?.data?.message || 'OTP verification failed'
       setError(msg)
       return { success: false, message: msg }
     } finally {
@@ -124,7 +124,7 @@ export function AuthProvider({ children }) {
       saveSession(data.token, userInfo)
       return { success: true, data }
     } catch (err) {
-      const msg = err.response?.data?.message || 'Admin login failed'
+      const msg = err.response?.data?.error || err.response?.data?.message || 'Admin login failed'
       setError(msg)
       return { success: false, message: msg }
     } finally {

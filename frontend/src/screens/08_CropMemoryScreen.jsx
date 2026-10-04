@@ -12,7 +12,7 @@ export default function CropMemoryScreen() {
   const [notes, setNotes] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
-  const cropId = dashboard?.farmerCrop?.id || 1;
+  const cropId = dashboard?.farmerCropId || dashboard?.farmerCrop?.id || 1;
 
   useEffect(() => {
     fetchTimeline(cropId);

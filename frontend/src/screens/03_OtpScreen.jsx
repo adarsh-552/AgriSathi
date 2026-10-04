@@ -1,11 +1,28 @@
-import React, { useState } from 'react';
-import { ArrowLeft, CheckCircle2, RefreshCw } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ArrowLeft, CheckCircle2, RefreshCw, KeyRound } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { authService } from '../services/authService';
 
 export default function OtpScreen({ identifier, onVerified, onBack }) {
   const [otp, setOtp] = useState('');
   const [localError, setLocalError] = useState('');
+  const [devOtp, setDevOtp] = useState('');
   const { verifyOtp, requestOtp, loading } = useAuth();
+
+  const fetchDevOtp = async () => {
+    try {
+      const data = await authService.getDevOtp(identifier);
+      if (data?.otp) {
+        setDevOtp(data.otp);
+      }
+    } catch {
+      // Production or dev preview not available
+    }
+  };
+
+  useEffect(() => {
+    fetchDevOtp();
+  }, [identifier]);
 
   const handleVerify = async (e) => {
     e.preventDefault();
@@ -28,6 +45,7 @@ export default function OtpScreen({ identifier, onVerified, onBack }) {
     setLocalError('');
     const res = await requestOtp(identifier);
     if (res.success) {
+      await fetchDevOtp();
       alert('కొత్త OTP పంపబడింది (OTP resent successfully)');
     }
   };
@@ -40,9 +58,37 @@ export default function OtpScreen({ identifier, onVerified, onBack }) {
         </button>
 
         <h2 className="text-2xl font-black text-forest-green mb-2">OTP ధ్రువీకరణ</h2>
-        <p className="text-sm text-gray-600 mb-6">
+        <p className="text-sm text-gray-600 mb-4">
           <span className="font-semibold text-gray-800">{identifier}</span> కు 6 అంకెల కోడ్ పంపబడింది.
         </p>
+
+        {/* Development Mode Simulated SMS Banner */}
+        {devOtp && (
+          <div className="bg-amber-50 border border-amber-300 rounded-2xl p-3.5 mb-5 flex items-center justify-between shadow-sm animate-fadeIn">
+            <div>
+              <div className="flex items-center space-x-1.5 text-amber-800 text-[11px] font-bold uppercase tracking-wider mb-0.5">
+                <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+                <span>డెవలప్‌మెంట్ SMS అనుకరణ (Dev SMS)</span>
+              </div>
+              <p className="text-xs text-gray-700">
+                మీ భద్రతా కోడ్:{' '}
+                <span className="font-mono font-black text-amber-950 text-base tracking-widest bg-amber-100/90 px-2 py-0.5 rounded border border-amber-300">
+                  {devOtp}
+                </span>
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setOtp(devOtp);
+                setLocalError('');
+              }}
+              className="text-xs bg-forest-green hover:bg-forest-green-light text-white font-bold px-3 py-1.5 rounded-xl shadow transition"
+            >
+              ఆటో-ఫిల్ (Fill)
+            </button>
+          </div>
+        )}
 
         <form onSubmit={handleVerify} className="space-y-5">
           <div>

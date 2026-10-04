@@ -21,4 +21,14 @@ export const authService = {
     const response = await api.post('/auth/admin/login', { email, password });
     return response.data;
   },
+
+  // Development-only OTP preview for manual browser testing
+  getDevOtp: async (identifier) => {
+    try {
+      const response = await api.get(`/auth/otp/dev-preview?identifier=${encodeURIComponent(identifier)}`);
+      return response.data;
+    } catch {
+      return null;
+    }
+  },
 };
